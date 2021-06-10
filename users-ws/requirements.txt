@@ -1,0 +1,3 @@
+Flask==1.1.2
+Flask-SQLAlchemy==2.5.1 # pip install Flask-SQLAlchemy
+psycopg2==2.8.6 # sudo apt-get build-dep python-psycopg2; pip install psycopg2-binary;

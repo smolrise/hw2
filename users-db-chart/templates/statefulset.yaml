@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-statefulset
+spec:
+#  serviceName: postgres1
+  serviceName: {{ include "users-db-chart.fullname" . }}
+  replicas: 1
+  selector:
+    matchLabels:
+#      app: postgres1
+#      app: {{ include "users-db-chart.fullname" . }}
+      {{- include "users-db-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+#        app: postgres1
+#        app: {{ include "users-db-chart.fullname" . }}
+        {{- include "users-db-chart.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:latest
+        ports:
+        - containerPort: 5432
+          name: postgredb
+        env:
+          - name: POSTGRES_DB
+            valueFrom:
+              configMapKeyRef:
+                name: users-db-config
+                key: POSTGRES_DB
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: users-db-secret
+                key: POSTGRES_USER
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: users-db-secret
+                key: POSTGRES_PASSWORD
+#          - name: GREETING
+#            valueFrom:
+#              configMapKeyRef:
+#                name: users-db-config
+#                key: GREETING
+        volumeMounts:
+        - name: postgredb
+          mountPath: /var/lib/postgresql/data
+          subPath: postgres
+  volumeClaimTemplates:
+  - metadata:
+      name: postgredb
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 1Gi

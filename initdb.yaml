@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "users-ws"
+spec:
+  template:
+    metadata:
+      name: "users-ws-app"
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: post-install-job
+        image: postgres:latest
+        env:
+          - name: POSTGRES_PASSWORD
+            value: "passwd"
+        command:
+          - sh
+          - "-c"
+          - |
+            psql postgres://myuser:passwd@database-users-db-chart:5432/users-ws-db <<'EOF'
+              create table client (id bigint primary key, name varchar, age int);
+              insert into client (id, name, age) values (1, 'Konstantin', 23);
+              insert into client (id, name, age) values (2, 'Dmitriy', 21);
+              insert into client (id, name, age) values (3, 'Vasiliy', 42);
+            EOF
+ 
+  backoffLimit: 0

@@ -1,0 +1,36 @@
+# Default values for users-db-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: postgres:latest
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+ingress:
+  enabled: false
+
+service:
+  type: NodePort
+  port: 5432
+  nodePort: 30240
+
+externalPostgresql:
+  postgresqlUsername: myuser
+  postgresqlPassword: passwd
+  postgresqlDatabase: users-ws-db
+  postgresqlHost: "database-users-db-chart"
+  postgresqlPort: "5432"
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

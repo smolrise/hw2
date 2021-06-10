@@ -1,0 +1,16 @@
+apiVersion: skaffold/v2alpha4
+kind: Config
+metadata:
+  name: users-ws-skaffold
+build:
+  tagPolicy:
+    envTemplate:
+      template: "v4"
+  artifacts:
+  - image: users-ws
+    context: users-ws
+deploy:
+  helm:
+    releases:
+    - name: users-ws-skaffold
+      chartPath: users-ws-chart

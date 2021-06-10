@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: users-ws-config
+data:
+  GREETING: "Alloha! Bonjour! Hei!"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: users-ws-secret
+data:
+  DATABASE_URI: {{ printf "postgresql+psycopg2://%s:%s@%s:%s/%s" .Values.externalPostgresql.postgresqlUsername .Values.externalPostgresql.postgresqlPassword .Values.externalPostgresql.postgresqlHost .Values.externalPostgresql.postgresqlPort .Values.externalPostgresql.postgresqlDatabase  | b64enc | quote }}
